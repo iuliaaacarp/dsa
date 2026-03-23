@@ -11,6 +11,26 @@ Queue::Queue(int capacity) {
     this->elems = new TElem[this->capacity];
 }
 
+Queue::Queue(const Queue &queue) {
+    this->capacity = queue.capacity;
+    this->nrOfElements = queue.nrOfElements;
+    this->elems = new TElem[this->nrOfElements];
+    for (int i = 0; i < this->nrOfElements; i++) {
+        this->elems[i] = queue.elems[i];
+    }
+}
+
+Queue &Queue::operator=(const Queue &queue) {
+    this->capacity = queue.capacity;
+    this->nrOfElements = queue.nrOfElements;
+    delete[] this->elems;
+    this->elems = new TElem[this->nrOfElements];
+    for (int i = 0; i < this->nrOfElements; i++) {
+        this->elems[i] = queue.elems[i];
+    }
+    return *this;
+}
+
 Queue::~Queue() {
     delete[] this->elems;
 }

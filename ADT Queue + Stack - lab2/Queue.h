@@ -17,6 +17,9 @@ private:
 
 public:
     Queue(int capacity = 10);
+
+    Queue(const Queue &queue);
+    Queue &operator=(const Queue &queue);
     ~Queue();
 
     void pushElem(TElem elem);

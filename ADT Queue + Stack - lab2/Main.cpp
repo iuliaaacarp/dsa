@@ -1,7 +1,6 @@
-#include <iostream>
-#include "Stack.h"
-#include "Queue.h"
+#include  "TestFunctions.h"
 
 int main() {
-
+    TestStack();
+    TestQueue();
 }

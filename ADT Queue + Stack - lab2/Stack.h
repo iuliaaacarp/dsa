@@ -15,7 +15,11 @@ private:
 
 public:
     Stack(int capacity = 10);
+
+    Stack(const Stack& stack);
+    Stack &operator=(const Stack& stack);
     ~Stack();
+
     void pushElem(TElem elem);
     TElem popElem();
     TElem topElem() const;

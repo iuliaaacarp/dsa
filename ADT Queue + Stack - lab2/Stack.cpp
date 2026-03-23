@@ -10,6 +10,27 @@ Stack::Stack(int capacity) {
     this->elems = new TElem[capacity];
 }
 
+Stack::Stack(const Stack &s) {
+    this->capacity = s.capacity;
+    this->nrOfElements = s.nrOfElements;
+    this->elems = new TElem[this->nrOfElements];
+    for (int i = 0; i < this->nrOfElements; i++) {
+        this->elems[i] = s.elems[i];
+    }
+}
+
+Stack &Stack::operator=(const Stack &s) {
+    this->capacity = s.capacity;
+    this->nrOfElements = s.nrOfElements;
+
+    delete[] this->elems;
+    this->elems = new TElem[this->nrOfElements];
+    for (int i = 0; i < this->nrOfElements; i++) {
+        this->elems[i] = s.elems[i];
+    }
+    return *this;
+}
+
 Stack::~Stack() {
     delete[] this->elems;
 }
