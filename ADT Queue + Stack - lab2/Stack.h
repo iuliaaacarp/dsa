@@ -11,7 +11,7 @@ private:
     int capacity;
     int nrOfElements;
 
-    void resize();
+    void resize(int factor =2);
 
 public:
     Stack(int capacity = 10);
