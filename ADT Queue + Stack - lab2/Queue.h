@@ -1,8 +1,27 @@
-//
-// Created by iulia on 3/22/2026.
-//
+#pragma once
+#include <exception>
 
-#ifndef DSA_QUEUE_H
-#define DSA_QUEUE_H
+using namespace std;
 
-#endif //DSA_QUEUE_H
+typedef int TElem;
+
+class Queue {
+private:
+    TElem *elems;
+    int capacity;
+    int head;
+    int tail;
+    int nrOfElements;
+
+    void resize(int factor =2);
+
+public:
+    Queue(int capacity = 10);
+    ~Queue();
+
+    void pushElem(TElem elem);
+    TElem popElem();
+    TElem frontElem() const;
+    bool isEmpty() const;
+    int size() const;
+};
