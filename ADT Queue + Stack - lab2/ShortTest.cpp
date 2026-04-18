@@ -1,4 +1,4 @@
-#include "TestFunctions.h"
+#include "ShortTest.h"
 
 #include <assert.h>
 #include <iostream>

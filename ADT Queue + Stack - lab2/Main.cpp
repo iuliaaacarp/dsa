@@ -1,4 +1,4 @@
-#include  "TestFunctions.h"
+#include  "ShortTest.h"
 
 int main() {
     TestStack();
