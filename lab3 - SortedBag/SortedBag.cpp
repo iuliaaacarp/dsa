@@ -1,5 +1,7 @@
 #include "SortedBag.h"
 
+#include "SortedBagIterator.h"
+
 SortedBag::SortedBag(Relation rel){
     this->relation = rel;
     this->head = nullptr;
@@ -26,6 +28,11 @@ int SortedBag::size() const{
 // BC = WC = TC: Theta(1)
 bool SortedBag::isEmpty() const{
     return this->bagSize == 0;
+}
+
+// BC = WC = TC: Theta(1)
+SortedBagIterator SortedBag::iterator() const{
+    return SortedBagIterator(*this);
 }
 
 // BC: Theta(1) - List is empty or element belongs at the head.
@@ -65,6 +72,9 @@ void SortedBag::add(TElem elem){
     this->bagSize++;
 }
 
+// BC: Theta(1) - Element is at the head.
+// WC: Theta(N) - Element is at the tail or not in the bag.
+// TC: O(N)
 bool SortedBag::remove(TElem elem){
     Node *curr = this->head;
     while (curr != nullptr && curr->elem != elem){
@@ -81,11 +91,35 @@ bool SortedBag::remove(TElem elem){
             this->head = nullptr;
             this->tail = nullptr;
         }
+        else if (curr == this->head){ // remove head
+            this->head = this->head->next;
+            this->head->prev = nullptr;
+        }
+        else if (curr == this->tail){ // remove tail
+            this->tail = this->tail->prev;
+            this->tail->next = nullptr;
+        }
+        else{ // remove in the middle
+            curr->prev->next = curr->next;
+            curr->next->prev = curr->prev;
+        }
+        delete curr;
     }
+    return true;
 }
 
-
+// BC: Theta(1), WC: Theta(N), TC: O(N)
 bool SortedBag::exists(TElem elem) const{
     return this->frequency(elem) > 0;
 }
 
+// BC: Theta(1), WC: Theta(N), TC: O(N)
+int SortedBag::frequency(TElem elem) const{
+    Node *curr = this->head;
+    while (curr != nullptr){
+        if (curr->elem == elem)
+            return curr->freq;
+        curr = curr->next;
+    }
+    return 0;
+}

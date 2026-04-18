@@ -8,7 +8,7 @@ class SortedBagIterator;
 
 class SortedBag
 {
-    friend SortedBagIterator;
+    friend class SortedBagIterator;
 private:
     struct Node
     {
@@ -28,6 +28,7 @@ public:
     ~SortedBag();
     int size() const;
     bool isEmpty() const;
+    SortedBagIterator iterator() const;
 
     void add(TElem elem);
     bool remove(TElem elem);
