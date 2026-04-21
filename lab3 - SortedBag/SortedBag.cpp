@@ -1,125 +1,131 @@
 #include "SortedBag.h"
-
 #include "SortedBagIterator.h"
 
-SortedBag::SortedBag(Relation rel){
-    this->relation = rel;
-    this->head = nullptr;
-    this->tail = nullptr;
-    this->bagSize = 0;
+// Complexity: Theta(1)
+SortedBag::SortedBag(Relation r) {
+	this->relation = r;
+	this->head = nullptr;
+	this->tail = nullptr;
+	this->totalSize = 0;
 }
 
-// BC = WC = TC: Theta(N)
-SortedBag::~SortedBag(){
-    Node *curr = this->head;
-    while (curr != nullptr)
-    {
-        Node *temp = curr->next;
-        delete curr;
-        curr = temp;
-    }
+// Complexity: Best Case: Theta(1), Worst/Average Case: O(N) where N is the number of distinct elements
+void SortedBag::add(TComp e) {
+	Node* current = head;
+	Node* prev = nullptr;
+
+	// Traverse the list until we find the correct position based on the relation
+	while (current != nullptr && relation(current->elem, e)) {
+		if (current->elem == e) {
+			current->freq++;
+			this->totalSize++;
+			return;
+		}
+		prev = current;
+		current = current->next;
+	}
+
+	// Check if the element was found right where the loop stopped
+	if (current != nullptr && current->elem == e) {
+		current->freq++;
+		this->totalSize++;
+		return;
+	}
+
+	// Element not found, create a new node and insert it
+	Node* newNode = new Node{ e, 1, current, prev };
+
+	if (prev != nullptr) {
+		prev->next = newNode;
+	} else {
+		this->head = newNode;
+	}
+
+	if (current != nullptr) {
+		current->prev = newNode;
+	} else {
+		this->tail = newNode;
+	}
+
+	this->totalSize++;
 }
 
-// BC = WC = TC: Theta(1)
-int SortedBag::size() const{
-    return this->bagSize;
+// Complexity: Best Case: Theta(1), Worst/Average Case: O(N)
+bool SortedBag::remove(TComp e) {
+	Node* current = head;
+
+	while (current != nullptr) {
+		if (current->elem == e) {
+			current->freq--;
+			this->totalSize--;
+
+			// If frequency reaches 0, remove the node entirely
+			if (current->freq == 0) {
+				if (current->prev != nullptr) {
+					current->prev->next = current->next;
+				} else {
+					this->head = current->next;
+				}
+
+				if (current->next != nullptr) {
+					current->next->prev = current->prev;
+				} else {
+					this->tail = current->prev;
+				}
+				delete current;
+			}
+			return true;
+		}
+		current = current->next;
+	}
+	return false;
 }
 
-// BC = WC = TC: Theta(1)
-bool SortedBag::isEmpty() const{
-    return this->bagSize == 0;
+// Complexity: Best Case: Theta(1), Worst/Average Case: O(N)
+bool SortedBag::search(TComp elem) const {
+	Node* current = head;
+	while (current != nullptr) {
+		if (current->elem == elem) {
+			return true;
+		}
+		current = current->next;
+	}
+	return false;
 }
 
-// BC = WC = TC: Theta(1)
-SortedBagIterator SortedBag::iterator() const{
-    return SortedBagIterator(*this);
+// Complexity: Best Case: Theta(1), Worst/Average Case: O(N)
+int SortedBag::nrOccurrences(TComp elem) const {
+	Node* current = head;
+	while (current != nullptr) {
+		if (current->elem == elem) {
+			return current->freq;
+		}
+		current = current->next;
+	}
+	return 0;
 }
 
-// BC: Theta(1) - List is empty or element belongs at the head.
-// WC: Theta(N) - Element belongs at the tail or doesn't exist and goes to the end (N = number of unique elements).
-// TC: O(N)
-void SortedBag::add(TElem elem){
-    Node *curr = this->head;
-    while (curr != nullptr && this->relation(curr->elem, elem) && curr->elem != elem){
-        curr = curr->next;
-    }
-    if (curr != nullptr && curr->elem == elem)
-        curr->freq++;
-    else
-    {
-        Node *newNode = new Node {elem, 1,nullptr, nullptr};
-        if (this->head == nullptr){ // the list is empty
-            this->head = newNode;
-            this->tail = newNode;
-        }
-        else if (curr == this->head){ // insert before the head
-            newNode->next = this->head;
-            this->head->prev = newNode;
-            this->head = newNode;
-        }
-        else if (curr == nullptr){ // insert after the tail
-            newNode->prev = this->tail;
-            this->tail->next = newNode;
-            this->tail = newNode;
-        }
-        else{ // insert in the middle
-            newNode->prev = curr->prev;
-            newNode->next = curr;
-            curr->prev->next = newNode;
-            curr->prev = newNode;
-        }
-    }
-    this->bagSize++;
+// Complexity: Theta(1)
+int SortedBag::size() const {
+	return this->totalSize;
 }
 
-// BC: Theta(1) - Element is at the head.
-// WC: Theta(N) - Element is at the tail or not in the bag.
-// TC: O(N)
-bool SortedBag::remove(TElem elem){
-    Node *curr = this->head;
-    while (curr != nullptr && curr->elem != elem){
-        curr = curr->next;
-    }
-    if (curr == nullptr)
-        return false;
-
-    curr->freq--;
-    this->bagSize--;
-    if (curr->freq == 0)
-    {
-        if (curr == this->head && curr == this->tail){ // only one node
-            this->head = nullptr;
-            this->tail = nullptr;
-        }
-        else if (curr == this->head){ // remove head
-            this->head = this->head->next;
-            this->head->prev = nullptr;
-        }
-        else if (curr == this->tail){ // remove tail
-            this->tail = this->tail->prev;
-            this->tail->next = nullptr;
-        }
-        else{ // remove in the middle
-            curr->prev->next = curr->next;
-            curr->next->prev = curr->prev;
-        }
-        delete curr;
-    }
-    return true;
+// Complexity: Theta(1)
+bool SortedBag::isEmpty() const {
+	return this->totalSize == 0;
 }
 
-// BC: Theta(1), WC: Theta(N), TC: O(N)
-bool SortedBag::exists(TElem elem) const{
-    return this->frequency(elem) > 0;
+// Complexity: Theta(1)
+SortedBagIterator SortedBag::iterator() const {
+	return SortedBagIterator(*this);
 }
 
-// BC: Theta(1), WC: Theta(N), TC: O(N)
-int SortedBag::frequency(TElem elem) const{
-    Node *curr = this->head;
-    while (curr != nullptr){
-        if (curr->elem == elem)
-            return curr->freq;
-        curr = curr->next;
-    }
-    return 0;
+// Complexity: Theta(N)
+SortedBag::~SortedBag() {
+	Node* current = head;
+	while (current != nullptr) {
+		Node* toDelete = current;
+		current = current->next;
+		delete toDelete;
+	}
 }

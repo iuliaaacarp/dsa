@@ -1,20 +1,22 @@
 #pragma once
-
 #include "SortedBag.h"
+
+class SortedBag;
 
 class SortedBagIterator
 {
     friend class SortedBag;
-private:
-    const SortedBag &bag;
-    SortedBag::Node* current;
-    int currFreq;
 
-    SortedBagIterator(const SortedBag &bag);
+private:
+    const SortedBag& bag;
+    SortedBagIterator(const SortedBag& b);
+
+    Node* currentNode;
+    int currentFreq;
 
 public:
-    void first();
+    TComp getCurrent();
+    bool valid();
     void next();
-    TElem getCurrent() const;
-    bool valid() const;
+    void first();
 };

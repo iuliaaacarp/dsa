@@ -1,38 +1,45 @@
 #include "SortedBagIterator.h"
+#include "SortedBag.h"
 #include <exception>
 
-SortedBagIterator::SortedBagIterator(const SortedBag& bag) : bag(bag){
-    this->current = this->bag.head;
-    this->currFreq = 1;
+using namespace std;
+
+// Complexity: Theta(1)
+SortedBagIterator::SortedBagIterator(const SortedBag& b) : bag(b) {
+    this->currentNode = bag.head;
+    this->currentFreq = 1;
 }
 
-// BC = WC = TC: Theta(1)
-void SortedBagIterator::first(){
-    this->current = this->bag.head;
-    this->currFreq = 1;
+// Complexity: Theta(1)
+TComp SortedBagIterator::getCurrent() {
+    if (!this->valid()) {
+        throw exception();
+    }
+    return this->currentNode->elem;
 }
 
-// BC = WC = TC: Theta(1)
-void SortedBagIterator::next(){
-    if (!this->valid())
-        throw std::exception();
+// Complexity: Theta(1)
+bool SortedBagIterator::valid() {
+    return this->currentNode != nullptr;
+}
 
-    if (this->currFreq < this->current->freq)
-        this->currFreq++;
-    else{
-        this->current = this->current->next;
-        this->currFreq = 1;
+// Complexity: Theta(1)
+void SortedBagIterator::next() {
+    if (!this->valid()) {
+        throw exception();
+    }
+    // If there are more occurrences of the current element, just increment frequency counter
+    if (this->currentFreq < this->currentNode->freq) {
+        this->currentFreq++;
+    } else {
+        // Otherwise, move to the next node
+        this->currentNode = this->currentNode->next;
+        this->currentFreq = 1;
     }
 }
 
-// BC = WC = TC: Theta(1)
-TElem SortedBagIterator::getCurrent() const{
-    if (!this->valid())
-        throw std::exception();
-    return this->current->elem;
-}
-
-// BC = WC = TC: Theta(1)
-bool SortedBagIterator::valid() const{
-    return this->current != nullptr;
+// Complexity: Theta(1)
+void SortedBagIterator::first() {
+    this->currentNode = this->bag.head;
+    this->currentFreq = 1;
 }
