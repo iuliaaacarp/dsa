@@ -14,7 +14,6 @@ void SortedBag::add(TComp e) {
 	Node* current = head;
 	Node* prev = nullptr;
 
-	// Traverse the list until we find the correct position based on the relation
 	while (current != nullptr && relation(current->elem, e)) {
 		if (current->elem == e) {
 			current->freq++;
@@ -25,14 +24,12 @@ void SortedBag::add(TComp e) {
 		current = current->next;
 	}
 
-	// Check if the element was found right where the loop stopped
 	if (current != nullptr && current->elem == e) {
 		current->freq++;
 		this->totalSize++;
 		return;
 	}
 
-	// Element not found, create a new node and insert it
 	Node* newNode = new Node{ e, 1, current, prev };
 
 	if (prev != nullptr) {
@@ -59,7 +56,6 @@ bool SortedBag::remove(TComp e) {
 			current->freq--;
 			this->totalSize--;
 
-			// If frequency reaches 0, remove the node entirely
 			if (current->freq == 0) {
 				if (current->prev != nullptr) {
 					current->prev->next = current->next;

@@ -28,11 +28,9 @@ void SortedBagIterator::next() {
     if (!this->valid()) {
         throw exception();
     }
-    // If there are more occurrences of the current element, just increment frequency counter
     if (this->currentFreq < this->currentNode->freq) {
         this->currentFreq++;
     } else {
-        // Otherwise, move to the next node
         this->currentNode = this->currentNode->next;
         this->currentFreq = 1;
     }
