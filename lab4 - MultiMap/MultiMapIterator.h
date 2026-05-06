@@ -9,7 +9,7 @@ class MultiMapIterator
 
 private:
 	const MultiMap& col;
-	//TODO - Representation
+	int currPosition;
 
 	//DO NOT CHANGE THIS PART
 	MultiMapIterator(const MultiMap& c);

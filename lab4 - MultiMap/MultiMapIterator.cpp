@@ -3,24 +3,28 @@
 
 
 MultiMapIterator::MultiMapIterator(const MultiMap& c): col(c) {
-	//TODO - Implementation
+	this->currPosition = this->col.head;
 }
 
 TElem MultiMapIterator::getCurrent() const{
-	//TODO - Implementation
-	return NULL_TELEM;
+	if (!valid())
+		throw std::exception();
+	return this->col.elements[this->currPosition];
 }
 
 bool MultiMapIterator::valid() const {
-	//TODO - Implementation
+	if (this->currPosition != -1)
+		return true;
 	return false;
 }
 
 void MultiMapIterator::next() {
-	//TODO - Implementation
+	if (!valid())
+		throw std::exception();
+	this->currPosition = this->col.next[this->currPosition];
 }
 
 void MultiMapIterator::first() {
-	//TODO - Implementation
+	this->currPosition = this->col.head;
 }
 

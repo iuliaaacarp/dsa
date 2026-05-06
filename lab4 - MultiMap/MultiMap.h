@@ -18,7 +18,17 @@ class MultiMap
 	friend class MultiMapIterator;
 
 private:
-	//TODO - Representation
+	int capacity;
+	TElem *elements;
+	int *next;
+	int *prev;
+
+	int head;
+	int tail;
+	int firstFree;
+	int mapSize;
+
+	void resize();
 
 public:
 	//constructor
